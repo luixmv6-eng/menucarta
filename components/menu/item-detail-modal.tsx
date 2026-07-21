@@ -3,13 +3,16 @@
 import { useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import Image from "next/image"
-import { X, Wine, Leaf, Fish, Flame, Award } from "lucide-react"
+import { X, Wine, Leaf, Fish, Flame, Award, ShoppingBag } from "lucide-react"
+import { toast } from "sonner"
+import { useCart } from "@/components/cart/cart-context"
 import type { MenuItem } from "@/lib/menu-data"
 
 interface ItemDetailModalProps {
   item: MenuItem | null
   isOpen: boolean
   onClose: () => void
+  allowOrdering?: boolean
 }
 
 const tagIcons: Record<string, React.ElementType> = {
@@ -20,7 +23,8 @@ const tagIcons: Record<string, React.ElementType> = {
   "Luxurious": Award,
 }
 
-export function ItemDetailModal({ item, isOpen, onClose }: ItemDetailModalProps) {
+export function ItemDetailModal({ item, isOpen, onClose, allowOrdering = false }: ItemDetailModalProps) {
+  const { add, setOpen } = useCart()
   // Close on escape key
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -188,6 +192,29 @@ export function ItemDetailModal({ item, isOpen, onClose }: ItemDetailModalProps)
                         )
                       })}
                     </motion.div>
+
+                    {/* Add to order */}
+                    {allowOrdering && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.45 }}
+                        className="mb-8"
+                      >
+                        <button
+                          onClick={() => {
+                            add({ id: item.id, name: item.name, price: item.price, image: item.image })
+                            toast.success(`${item.name} added to your order`)
+                            onClose()
+                            setTimeout(() => setOpen(true), 350)
+                          }}
+                          className="group flex items-center justify-center gap-3 w-full py-4 rounded-full bg-gradient-to-r from-primary to-primary/80 text-primary-foreground tracking-[0.2em] uppercase text-sm hover:glow-gold-intense transition-shadow duration-500"
+                        >
+                          <ShoppingBag className="w-4 h-4" />
+                          Add to Order · ${item.price}
+                        </button>
+                      </motion.div>
+                    )}
 
                     {/* Pairing Note */}
                     {item.pairingNote && (

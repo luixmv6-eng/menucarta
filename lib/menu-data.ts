@@ -1,21 +1,6 @@
-export interface MenuItem {
-  id: string
-  name: string
-  description: string
-  price: number
-  image: string
-  tags: string[]
-  isSignature?: boolean
-  pairingNote?: string
-}
+import type { MenuCategory, MenuItem } from "./types"
 
-export interface MenuCategory {
-  id: string
-  name: string
-  description: string
-  icon: string
-  items: MenuItem[]
-}
+export type { MenuCategory, MenuItem }
 
 export const menuCategories: MenuCategory[] = [
   {

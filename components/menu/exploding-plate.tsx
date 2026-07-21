@@ -195,15 +195,13 @@ export function ExplodingPlate() {
         ].map((pos, i) => (
           <motion.div
             key={i}
-            style={{ 
-              y: i % 2 === 0 ? element1Y : element3Y,
-              x: i % 2 === 0 ? element2X : element4X
-            }}
             className="absolute rounded-full bg-gradient-to-br from-green-400 to-green-600 shadow-sm"
-            style={{ 
-              top: pos.top, 
-              left: pos.left, 
-              right: pos.right 
+            style={{
+              y: i % 2 === 0 ? element1Y : element3Y,
+              x: i % 2 === 0 ? element2X : element4X,
+              top: pos.top,
+              left: pos.left,
+              right: pos.right,
             }}
           >
             <div className={`${pos.size} rounded-full bg-gradient-to-br from-green-400 to-green-600`} />

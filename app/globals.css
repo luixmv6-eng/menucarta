@@ -252,6 +252,40 @@ html {
   animation: float 6s ease-in-out infinite;
 }
 
+/* Luxury form inputs */
+.input-lux {
+  width: 100%;
+  background: oklch(0.10 0.02 280 / 0.6);
+  border: 1px solid oklch(1 0 0 / 0.1);
+  border-radius: 0.9rem;
+  padding: 0.85rem 1.1rem;
+  color: var(--foreground);
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  outline: none;
+  font-size: 1rem;
+}
+
+.input-lux:focus {
+  border-color: oklch(0.78 0.12 55 / 0.5);
+  box-shadow: 0 0 20px oklch(0.78 0.12 55 / 0.1);
+}
+
+.input-lux::placeholder {
+  color: oklch(0.45 0.02 60);
+}
+
+select.input-lux option {
+  background: oklch(0.10 0.02 280);
+  color: oklch(0.97 0.01 60);
+}
+
+input[type="date"].input-lux::-webkit-calendar-picker-indicator {
+  filter: invert(0.65) sepia(0.4) saturate(2) hue-rotate(5deg);
+  cursor: pointer;
+}
+
 /* Pulse glow */
 @keyframes pulseGlow {
   0%, 100% { opacity: 0.4; transform: scale(1); }

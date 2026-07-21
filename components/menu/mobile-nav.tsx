@@ -24,7 +24,7 @@ export function MobileNav({ categories, activeCategory, onCategoryChange }: Mobi
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-      className="lg:hidden sticky top-0 z-50"
+      className="lg:hidden sticky top-16 z-[120]"
     >
       {/* Glassmorphism nav bar with elegant gradient border */}
       <div className="relative">
