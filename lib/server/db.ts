@@ -1,10 +1,14 @@
 import fs from "node:fs"
+import os from "node:os"
 import path from "node:path"
 import { randomUUID } from "node:crypto"
 import type { DatabaseShape } from "../types"
 import { buildSeed } from "./seed"
 
-const DATA_DIR = path.join(process.cwd(), "data")
+// On serverless platforms (Vercel) the project directory is read-only; only the
+// system temp dir is writable. Fall back to it so persisting never crashes a request.
+const IS_SERVERLESS = Boolean(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME)
+const DATA_DIR = IS_SERVERLESS ? path.join(os.tmpdir(), "lumina-data") : path.join(process.cwd(), "data")
 const DB_FILE = path.join(DATA_DIR, "db.json")
 
 declare global {
@@ -39,10 +43,15 @@ function load(): DatabaseShape {
 }
 
 function persist(db: DatabaseShape) {
-  fs.mkdirSync(DATA_DIR, { recursive: true })
-  const tmp = DB_FILE + ".tmp"
-  fs.writeFileSync(tmp, JSON.stringify(db, null, 2), "utf8")
-  fs.renameSync(tmp, DB_FILE)
+  try {
+    fs.mkdirSync(DATA_DIR, { recursive: true })
+    const tmp = DB_FILE + ".tmp"
+    fs.writeFileSync(tmp, JSON.stringify(db, null, 2), "utf8")
+    fs.renameSync(tmp, DB_FILE)
+  } catch {
+    // Read-only filesystem (e.g. serverless cold start): keep serving from the
+    // in-memory copy held in globalThis.__luminaDb so requests never 500.
+  }
 }
 
 export function getDb(): DatabaseShape {
